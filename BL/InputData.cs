@@ -32,7 +32,7 @@ namespace BL
                     }
                     else if (!string.IsNullOrWhiteSpace(objValue) && string.IsNullOrEmpty(function))
                     {
-                        ReadRestrictions(objValue);
+                        SearchObjConstraints(objValue);
                         PrintInfo?.Invoke(this, objValue.Trim());
                     }
                 }
@@ -43,8 +43,8 @@ namespace BL
 
         private void SearchObjFunction(string objFunction)
         {
-            RegexOptions options = RegexOptions.Multiline;
-            string pattern = @"(?!min|max|x|F)([+-]?\s[+-]?[0-9]*[.,]?[0-9])";
+            const RegexOptions options = RegexOptions.Multiline;
+            const string pattern = @"(?!min|max|x|F)([+-]?\s[+-]?[0-9]*[.,]?[0-9])";
 
             var functionAspiration = objFunction?.Split().FirstOrDefault(x => x == "min" || x == "max");
 
@@ -56,47 +56,44 @@ namespace BL
             Function = new Function(_dataFunction.ToArray(), functionAspiration == "max" ? Aspiration.max : Aspiration.min);
         }
 
-        private void ReadRestrictions(string input)
+        private void SearchObjConstraints(string input)
         {
-            var patternBound = @"(\s[>=<]+)";
-            var patternLeft = @"([+-]?\s[+-]?[0-9]*[.,]?[0-9])";
-            var patternFull = @"(([-]?[0-9]*[.,]?[0-9])\s*([^>=<]*))";
+            const string patternBound = @"(\s[>=<]+)";
+            const string patternLeft = @"([+-]?\s[+-]?[0-9]*[.,]?[0-9])";
+            const string patternFull = @"(([-]?[0-9]*[.,]?[0-9])\s*([^>=<]*))";
            
-            RegexOptions options = RegexOptions.Multiline;
+            const RegexOptions options = RegexOptions.Multiline;
             var restriction = Regex.Matches(input, patternFull, options);
 
             var leftRestriction = " "+ restriction[0].Value;
             var rightRestriction =  double.Parse(restriction[1].Value);
-            List<double> consValues = new List<double>();
+
+            var consValues = new List<double>();
 
             foreach (Match objectMatch in Regex.Matches(leftRestriction, patternLeft, options))
-            {
-                 consValues.Add(double.Parse(objectMatch.Value.Trim().Replace(" ", "")));
-            }
+                consValues.Add(double.Parse(objectMatch.Value.Trim().Replace(" ", "")));
 
-            var boundMacth = Regex.Matches(input, patternBound, options);
-            var bound = 0;
-            switch (boundMacth[0].Value.Trim())
-            {
-                case "<=":
-                {
-                    bound = AbstractSimplex.LESS_THAN;
-                    break;
-                }
-                case ">=":
-                {
-                    bound = AbstractSimplex.GREATER_THAN;
-                    break;
-                }
-                case "=":
-                {
-                    bound = AbstractSimplex.EQUAL_TO;
-                    break;
-                }
-            }
+            var boundMatch = Regex.Matches(input, patternBound, options);
+            var bound = DefineBound(boundMatch[0].Value.Trim());
 
             _constraints.Add(new DConstraint(consValues.ToArray(),bound, rightRestriction));
           
         }
+
+        private static int DefineBound(string boundMatch)
+        {
+            switch (boundMatch)
+            {
+                case "<=":
+                    return AbstractSimplex.LESS_THAN;
+                case ">=":
+                    return AbstractSimplex.GREATER_THAN;
+                case "=":
+                    return AbstractSimplex.EQUAL_TO;
+                default:
+                    return AbstractSimplex.EQUAL_TO;
+            }
+        }
+
     }
 }
