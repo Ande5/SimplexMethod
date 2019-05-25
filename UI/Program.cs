@@ -1,15 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BL;
+using System;
 
 namespace UI
 {
-    class Program
+    static class Program
     {
+
         static void Main(string[] args)
         {
+             var inputData = new InputData();
+             inputData.PrintInfo += InputData_PrintInfo;
+             inputData.ReadDataFile("Simplex Variant_2.txt");
+
+             var initializeSimplex = new InitializeSimplex(inputData.Function, inputData.Constraints);
+             initializeSimplex.PrintInfo += InputData_PrintInfo;
+             initializeSimplex.Initialize();
+            
+            Console.ReadKey();
         }
+
+        private static void InputData_PrintInfo(object sender, string data) => Console.WriteLine(data);
     }
 }

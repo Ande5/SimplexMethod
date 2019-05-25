@@ -56,10 +56,10 @@ namespace BL.Simplex
             locked = new bool[basisVariable.Length];
         }
 
-        public void SetObjective(double[] objective, bool minimize)
+        public void SetObjective(Function function)
         {
-            this.objective = objective;
-            this.minimize = minimize;
+            objective = function.DataFunction;
+            minimize = function.Aspiration == Aspiration.min;
         }
 
         public void SetConstraints(double[][] constraints, int[] equations, double[] rhs)

@@ -12,15 +12,10 @@ namespace BL.Simplex
             double min = Double.PositiveInfinity;
             for (int i = 0; i < m[m.Length - 1].Length - 1; ++i)
             {
-                if (
-                    m[m.Length - 1][i] < 0 &&
-                    m[m.Length - 1][i] < min &&
-                    (i < objective.Length || !locked[i - objective.Length]))
-                {
-
-                    pc = i;
-                    min = m[m.Length - 1][i];
-                }
+                if (!(m[m.Length - 1][i] < 0) || !(m[m.Length - 1][i] < min) ||
+                    i >= objective.Length && locked[i - objective.Length]) continue;
+                pc = i;
+                min = m[m.Length - 1][i];
             }
             if (pc < 0)
             {

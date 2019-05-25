@@ -5,58 +5,25 @@ namespace BL
     public class InitializeSimplex
     {
         private DualSimplex _dualSimplex;
-        private DConstraint[] _constraintsValue;
-        private double[] _targetCoefficients;
-        private static int status;
+        private readonly Function _function;
+        private readonly DConstraint[] _constraintsValue;
+      
+        public int Variables { get; set; }
+        public int Constraints { get; set; }
 
-        public InitializeSimplex(int variables, int constraints, DConstraint[] constraintsValue)
+        public InitializeSimplex(Function function, DConstraint[] constraintsValue, bool autoVariableConstraints = true)
         {
-            Variables = variables;
-            Constraints = constraints;
+            _function = function;
             _constraintsValue = constraintsValue;
+            
+            if (!autoVariableConstraints) return;
+            Constraints = constraintsValue.Length;
+            Variables = _function.DataFunction.Length;
         }
 
-        public int Variables { get; private set; }
-        public int Constraints { get; private set; }
-
-
-        private void Initialize()
+        public void Initialize()
         {
-            _targetCoefficients = new double[Variables];
-            _constraintsValue = new DConstraint[Constraints];
-
-            //TODO:Добавить считывание из файла
-            for (int i = 0; i < Variables; i++)
-            {
-                
-               // _targetCoefficients[i] = double.Parse(objFunction[i].Text);
-            }
-
-            for (int i = 0; i < Constraints; i++)
-            {
-                // Stores constraint values at given index
-                double[] consValues = new double[Variables];
-               
-                //TODO:Take right side of constraint
-               // double right = double.Parse(constraintFunctionRight[i].Text);
-
-                //TODO:Take all fields and parse to double
-                //for (int j = 0; j < Variables; j++)
-                //{
-                //    consValues[j] = double.Parse(constraintFunction[i][j].Text);
-                //}
-                // Represents sign of constraint
-                int bound = 0;
-
-                //if (constraintSigns[i].SelectedIndex == 0) bound = AbstractSimplex.LESS_THAN;
-                //else if (constraintSigns[i].SelectedIndex == 1) bound = AbstractSimplex.EQUAL_TO;
-                //else bound = AbstractSimplex.GREATER_THAN;
-
-                // Create object of DContraint passing arguments of variables, sign and right side, and store it to array
-                //_constraintsValue[i] = new DConstraint(consValues, bound, right);
-            }
-
-            InitDualSimplex(true);
+            InitDualSimplex();
             Solve();
             AssertResult();
         }
@@ -66,15 +33,15 @@ namespace BL
         /// </summary>
         /// <param name="targetCoefficients"></param>
         /// <param name="minimize"></param>
-        private void InitDualSimplex(bool minimize)
+        private void InitDualSimplex()
         {
             _dualSimplex = new DualSimplex();
-            _dualSimplex.SetObjective(_targetCoefficients, minimize);
+            _dualSimplex.SetObjective(_function);
 
             var constraintArray = new double[_constraintsValue.Length][];
             for (int i = 0; i < _constraintsValue.Length; i++)
             {
-                constraintArray[i] = new double[_targetCoefficients.Length];
+                constraintArray[i] = new double[Variables];
             }
 
             var rhs = new double[_constraintsValue.Length];
@@ -86,15 +53,22 @@ namespace BL
                 equations[i] = _constraintsValue[i].GetEquations();
                 rhs[i] = _constraintsValue[i].GetRhs();
             }
+
+            _dualSimplex.SetConstraints(constraintArray, equations, rhs);
+            _dualSimplex.Init();
         }
+
 
         private void Solve()
         {
-            while ((status = _dualSimplex.Iterate()) == AbstractSimplex.CONTINUE)
+            while (true)
             {
-
+                if (_dualSimplex.Iterate() == AbstractSimplex.CONTINUE) continue;
+                break;
             }
         }
+
+        public event DataInfo PrintInfo;
 
         /// <summary>
         /// Вывод результата
@@ -102,14 +76,19 @@ namespace BL
         private void AssertResult()
         {
             // Get coefficients of objective function from simplex
-            double[] targetCoefficientValues = _dualSimplex.GetCoefficients();
+            var targetCoefficientValues = _dualSimplex.GetCoefficients();
             // Get answer function
-            string res = "Z = " + _dualSimplex.GetObjectiveResult() + "\n";
+            var res = "F(x) = " + _dualSimplex.GetObjectiveResult();
+            PrintInfo?.Invoke(this, res);
             // We do some formatting data here
-            for (int i = 0; i < _targetCoefficients.Length; ++i)
+            for (var i = 0; i < Variables; ++i)
             {
+                PrintInfo?.Invoke(this, " Target Coefficient#" + i + " : " + targetCoefficientValues[i]);
+
                 res = res + " Target Coefficient#" + i + " : " + targetCoefficientValues[i] + "\n";
             }
+                
+
         }
     }
 }
