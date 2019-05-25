@@ -44,13 +44,13 @@ namespace BL
         private void SearchObjFunction(string objFunction)
         {
             RegexOptions options = RegexOptions.Multiline;
-            string pattern = @"(?!min|max|x|F)\s([-]?[0-9]*[.,]?[0-9])";
+            string pattern = @"(?!min|max|x|F)([+-]?\s[+-]?[0-9]*[.,]?[0-9])";
 
             var functionAspiration = objFunction?.Split().FirstOrDefault(x => x == "min" || x == "max");
 
             foreach (Match m in Regex.Matches(objFunction ?? throw new InvalidOperationException(), pattern, options))
             {
-                _dataFunction.Add(double.Parse(m.Value));
+                _dataFunction.Add(double.Parse(m.Value.Trim().Replace(" ","")));
             }
 
             Function = new Function(_dataFunction.ToArray(), functionAspiration == "max" ? Aspiration.max : Aspiration.min);
@@ -59,7 +59,7 @@ namespace BL
         private void ReadRestrictions(string input)
         {
             var patternBound = @"(\s[>=<]+)";
-            var patternLeft = @"\s([-]?[0-9]*[.,]?[0-9])";
+            var patternLeft = @"([+-]?\s[+-]?[0-9]*[.,]?[0-9])";
             var patternFull = @"(([-]?[0-9]*[.,]?[0-9])\s*([^>=<]*))";
            
             RegexOptions options = RegexOptions.Multiline;
@@ -71,7 +71,7 @@ namespace BL
 
             foreach (Match objectMatch in Regex.Matches(leftRestriction, patternLeft, options))
             {
-                 consValues.Add(double.Parse(objectMatch.Value.Trim()));
+                 consValues.Add(double.Parse(objectMatch.Value.Trim().Replace(" ", "")));
             }
 
             var boundMacth = Regex.Matches(input, patternBound, options);
