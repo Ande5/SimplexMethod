@@ -10,11 +10,11 @@ namespace UI
         {
              var inputData = new InputData();
              inputData.PrintInfo += InputData_PrintInfo;
-             inputData.ReadDataFile("Simplex Variant_2.txt");
+             inputData.ReadDataFile("Simplex Variant_1.txt");
 
              var initializeSimplex = new InitializeSimplex(inputData.Function, inputData.Constraints);
              initializeSimplex.PrintInfo += InputData_PrintInfo;
-             initializeSimplex.Initialize();
+             initializeSimplex.AssertResult();
             
             Console.ReadKey();
         }

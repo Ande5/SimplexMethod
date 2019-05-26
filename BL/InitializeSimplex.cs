@@ -15,24 +15,23 @@ namespace BL
         {
             _function = function;
             _constraintsValue = constraintsValue;
-            
-            if (!autoVariableConstraints) return;
-            Constraints = constraintsValue.Length;
-            Variables = _function.DataFunction.Length;
+
+            Initialize(autoVariableConstraints);          
         }
 
-        public void Initialize()
+        private void Initialize(bool autoVariableConstraints)
         {
+            if (!autoVariableConstraints) return;
+            Constraints = _constraintsValue.Length;
+            Variables = _function.DataFunction.Length;
+
             InitDualSimplex();
-            Solve();
-            AssertResult();
+            IterationSolution();
         }
 
         /// <summary>
         /// Инициализация двойственого симплекс метода
-        /// </summary>
-        /// <param name="targetCoefficients"></param>
-        /// <param name="minimize"></param>
+        /// </summary>     
         private void InitDualSimplex()
         {
             _dualSimplex = new DualSimplex();
@@ -59,7 +58,7 @@ namespace BL
         }
 
 
-        private void Solve()
+        private void IterationSolution()
         {
             while (true)
             {
@@ -73,7 +72,7 @@ namespace BL
         /// <summary>
         /// Вывод результата
         /// </summary>
-        private void AssertResult()
+        public void AssertResult()
         {
             // Get coefficients of objective function from simplex
             var targetCoefficientValues = _dualSimplex.GetCoefficients();
@@ -84,11 +83,7 @@ namespace BL
             for (var i = 0; i < Variables; ++i)
             {
                 PrintInfo?.Invoke(this, " Target Coefficient#" + i + " : " + targetCoefficientValues[i]);
-
-                res = res + " Target Coefficient#" + i + " : " + targetCoefficientValues[i] + "\n";
             }
-                
-
         }
     }
 }

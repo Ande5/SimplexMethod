@@ -2,14 +2,14 @@
 
 namespace BL.Simplex
 {
-    public class PrimalSimplex:AbstractSimplex
+    internal class PrimalSimplex:AbstractSimplex
     {
         public int Iterate()
         {
             double quotient;
             // Select pivot column
             int pc = -1;
-            double min = Double.PositiveInfinity;
+            var min = double.PositiveInfinity;
             for (int i = 0; i < m[m.Length - 1].Length - 1; ++i)
             {
                 if (!(m[m.Length - 1][i] < 0) || !(m[m.Length - 1][i] < min) ||
@@ -24,7 +24,7 @@ namespace BL.Simplex
 
             // Select pivot row
             int pr = -1;
-            min = Double.PositiveInfinity;
+            min = double.PositiveInfinity;
             for (int i = 0; i < m.Length - 1; ++i)
             {
                 if (m[i][pc] > 0)

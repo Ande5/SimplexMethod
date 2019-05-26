@@ -2,14 +2,14 @@
 
 namespace BL.Simplex
 {
-    public class DualSimplex : PrimalSimplex
+    internal class DualSimplex : PrimalSimplex
     {
         private bool primal;
 
         public void Init()
         {
             base.Init();
-            this.primal = false;
+            primal = false;
         }
 
         public int Iterate()
@@ -20,7 +20,7 @@ namespace BL.Simplex
 
             // Select pivot row
             int pr = -1;
-            double min = Double.PositiveInfinity;
+            double min = double.PositiveInfinity;
             for (int i = 0; i < m.Length - 1; ++i)
             {
                 if (!(m[i][m[i].Length - 1] < 0) || !(m[i][m[i].Length - 1] < min)) continue;
@@ -42,7 +42,7 @@ namespace BL.Simplex
 
             // Select pivot column
             int pc = -1;
-            double max = Double.NegativeInfinity;
+            double max = double.NegativeInfinity;
             if (pr > -1)
             {
                 for (int i = 0; i < m[pr].Length - 1; ++i)
