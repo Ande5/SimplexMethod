@@ -28,7 +28,7 @@ namespace BL.Simplex
         private int[] _slackVariable;
         protected bool[] locked;
 
-        public void Init()
+        public virtual void Init()
         {
             m = new double[_constraints.Length + 1][];
             for (var i = 0; i < _constraints.Length + 1; i++)

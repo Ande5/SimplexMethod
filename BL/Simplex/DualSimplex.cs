@@ -4,23 +4,23 @@ namespace BL.Simplex
 {
     internal class DualSimplex : PrimalSimplex
     {
-        private bool primal;
+        private bool _primal;
 
-        public void Init()
+        public override void Init()
         {
             base.Init();
-            primal = false;
+            _primal = false;
         }
 
-        public int Iterate()
+        public override int Iterate()
         {
-            if (primal) return base.Iterate();
+            if (_primal) return base.Iterate();
 
             double quotient;
 
             // Select pivot row
             int pr = -1;
-            double min = double.PositiveInfinity;
+            var min = double.PositiveInfinity;
             for (int i = 0; i < m.Length - 1; ++i)
             {
                 if (!(m[i][m[i].Length - 1] < 0) || !(m[i][m[i].Length - 1] < min)) continue;
@@ -34,7 +34,7 @@ namespace BL.Simplex
                     if (!(m[m.Length - 1][i] < 0)) continue;
                     // Start primal
                     Console.WriteLine("Continue with primal simplex");
-                    primal = true;
+                    _primal = true;
                     return CONTINUE;
                 }
                 return OPTIMAL;
@@ -42,7 +42,7 @@ namespace BL.Simplex
 
             // Select pivot column
             int pc = -1;
-            double max = double.NegativeInfinity;
+            var max = double.NegativeInfinity;
             if (pr > -1)
             {
                 for (int i = 0; i < m[pr].Length - 1; ++i)
@@ -61,8 +61,6 @@ namespace BL.Simplex
                 }
             }
 
-            // Pivot
-            Console.WriteLine("Pivo: row=" + (pr + 1) + ", column=" + (pc + 1));
             Pivot(pr, pc);
 
             return CONTINUE;

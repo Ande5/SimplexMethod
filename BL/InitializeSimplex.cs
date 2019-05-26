@@ -16,7 +16,7 @@ namespace BL
             _function = function;
             _constraintsValue = constraintsValue;
 
-            Initialize(autoVariableConstraints);          
+            Initialize(autoVariableConstraints);
         }
 
         private void Initialize(bool autoVariableConstraints)

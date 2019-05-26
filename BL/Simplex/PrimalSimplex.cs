@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace BL.Simplex
+﻿namespace BL.Simplex
 {
-    internal class PrimalSimplex:AbstractSimplex
+    internal class PrimalSimplex : AbstractSimplex
     {
-        public int Iterate()
+        public virtual int Iterate()
         {
             double quotient;
             // Select pivot column
@@ -17,10 +15,8 @@ namespace BL.Simplex
                 pc = i;
                 min = m[m.Length - 1][i];
             }
-            if (pc < 0)
-            {
-                return OPTIMAL;
-            }
+
+            if (pc < 0) return OPTIMAL;
 
             // Select pivot row
             int pr = -1;
@@ -37,13 +33,9 @@ namespace BL.Simplex
                     }
                 }
             }
-            if (pr < 0)
-            {
-                return UNBOUNDED;
-            }
 
-            // Pivot
-            Console.WriteLine("Pivo: row=" + (pr + 1) + ", column=" + (pc + 1));
+            if (pr < 0) return UNBOUNDED;
+
             Pivot(pr, pc);
 
             return CONTINUE;

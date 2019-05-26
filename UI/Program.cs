@@ -15,7 +15,15 @@ namespace UI
              var initializeSimplex = new InitializeSimplex(inputData.Function, inputData.Constraints);
              initializeSimplex.PrintInfo += InputData_PrintInfo;
              initializeSimplex.AssertResult();
-            
+
+            var compilingDualTasks = new CompilingDualTasks();
+            compilingDualTasks.CompilingTasks(inputData.Function, inputData.Constraints);
+
+
+            var initializeSimplex1 = new InitializeSimplex(compilingDualTasks.Function, compilingDualTasks.Constraints);
+            initializeSimplex1.PrintInfo += InputData_PrintInfo;
+            initializeSimplex1.AssertResult();
+
             Console.ReadKey();
         }
 

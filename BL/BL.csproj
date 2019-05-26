@@ -49,6 +49,7 @@
     <Compile Include="Simplex\DConstraint.cs" />
     <Compile Include="Simplex\DualSimplex.cs" />
     <Compile Include="Simplex\PrimalSimplex.cs" />
+    <Compile Include="CompilingDualTasks.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
