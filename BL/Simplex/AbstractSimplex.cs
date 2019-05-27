@@ -148,22 +148,29 @@ namespace BL.Simplex
                 s.Append('\t');
                 for (int j = 0; j < m[i].Length; ++j)
                 {
-                    s.Append(m[i][j]);
+                    s.Append($"{m[i][j]:f2}");
                     s.Append('\t');
                 }
                 s.Append('\n');
             }
 
-            s.Append('Z');
+            s.Append("F(x)");
             s.Append('\t');
             for (int i = 0; i < m[m.Length - 1].Length; ++i)
             {
-                s.Append(m[m.Length - 1][i]);
+                s.Append($"{m[m.Length - 1][i]:f2}");
                 s.Append('\t');
             }
             s.Append('\n');
 
             return s.ToString();
+        }
+
+        public event DataInfo SimplexInfo;
+
+        protected void OnSimplexInfo(string data)
+        {
+            SimplexInfo?.Invoke(this, data);
         }
     }
 }

@@ -12,9 +12,10 @@ namespace UI
              inputData.PrintInfo += InputData_PrintInfo;
              inputData.ReadDataFile("Simplex Variant_1.txt");
 
-             var initializeSimplex = new InitializeSimplex(inputData.Function, inputData.Constraints);
-             initializeSimplex.PrintInfo += InputData_PrintInfo;
-             initializeSimplex.AssertResult();
+              var initializeSimplex = new InitializeSimplex(inputData.Function, inputData.Constraints);
+              initializeSimplex.PrintInfo += InputData_PrintInfo;
+              Console.WriteLine(initializeSimplex.SimplexTabel);
+              initializeSimplex.AssertResult();
 
             var compilingDualTasks = new CompilingDualTasks();
             compilingDualTasks.CompilingTasks(inputData.Function, inputData.Constraints);
@@ -22,6 +23,7 @@ namespace UI
 
             var initializeSimplex1 = new InitializeSimplex(compilingDualTasks.Function, compilingDualTasks.Constraints);
             initializeSimplex1.PrintInfo += InputData_PrintInfo;
+            Console.WriteLine(initializeSimplex1.SimplexTabel);
             initializeSimplex1.AssertResult();
 
             Console.ReadKey();

@@ -1,4 +1,5 @@
-﻿using BL.Simplex;
+﻿using System;
+using BL.Simplex;
 
 namespace BL
 {
@@ -35,6 +36,7 @@ namespace BL
         private void InitDualSimplex()
         {
             _dualSimplex = new DualSimplex();
+            _dualSimplex.SimplexInfo += DualSimplex_SimplexInfo;
             _dualSimplex.SetObjective(_function);
 
             var constraintArray = new double[_constraintsValue.Length][];
@@ -57,6 +59,9 @@ namespace BL
             _dualSimplex.Init();
         }
 
+        public string SimplexTabel { get; private set; }
+
+        private void DualSimplex_SimplexInfo(object sender, string data) => SimplexTabel += '\n'+ data;
 
         private void IterationSolution()
         {
@@ -82,7 +87,7 @@ namespace BL
             // We do some formatting data here
             for (var i = 0; i < Variables; ++i)
             {
-                PrintInfo?.Invoke(this, " Target Coefficient#" + i + " : " + targetCoefficientValues[i]);
+                PrintInfo?.Invoke(this, $" Target Coefficient# {i} : {targetCoefficientValues[i]:f3} ");
             }
         }
     }

@@ -37,7 +37,7 @@
             if (pr < 0) return UNBOUNDED;
 
             Pivot(pr, pc);
-
+            OnSimplexInfo(ToString());
             return CONTINUE;
         }
     }

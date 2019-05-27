@@ -62,8 +62,9 @@ namespace BL.Simplex
             }
 
             Pivot(pr, pc);
-
+            OnSimplexInfo(ToString());
             return CONTINUE;
+            
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using BL.Extensions;
 using BL.Simplex;
 
 namespace BL
@@ -50,7 +51,7 @@ namespace BL
 
             foreach (Match m in Regex.Matches(objFunction ?? throw new InvalidOperationException(), pattern, options))
             {
-                _dataFunction.Add(double.Parse(m.Value.Trim().Replace(" ","")));
+                _dataFunction.Add(double.Parse(m.Value.ReplacePointToComma()));
             }
 
             Function = new Function(_dataFunction.ToArray(), functionAspiration == "max" ? Aspiration.max : Aspiration.min);
@@ -71,7 +72,7 @@ namespace BL
             var consValues = new List<double>();
 
             foreach (Match objectMatch in Regex.Matches(leftRestriction, patternLeft, options))
-                consValues.Add(double.Parse(objectMatch.Value.Trim().Replace(" ", "")));
+                consValues.Add(double.Parse(objectMatch.Value.ReplacePointToComma()));
 
             var boundMatch = Regex.Matches(input, patternBound, options);
             var bound = DefineBound(boundMatch[0].Value.Trim());
