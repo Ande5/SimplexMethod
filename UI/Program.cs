@@ -25,8 +25,9 @@ namespace UI
 
             var compilingDualTasks = new CompilingDualTasks();
             compilingDualTasks.CompilingTasks(inputData.Function, inputData.Constraints);
-
-
+            MathematicalModel mathematical = new MathematicalModel(compilingDualTasks.Function, compilingDualTasks.Constraints);
+            var s = mathematical.ToString();
+            Console.WriteLine(s);
             var initializeSimplex1 = new InitializeSimplex(compilingDualTasks.Function, compilingDualTasks.Constraints);
             initializeSimplex1.PrintInfo += InputData_PrintInfo;
             Console.WriteLine(initializeSimplex1.SimplexTabel);

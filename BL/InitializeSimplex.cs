@@ -82,14 +82,16 @@ namespace BL
         {
             // Get coefficients of objective function from simplex
             var targetCoefficientValues = _dualSimplex.GetCoefficients();
-            // Get answer function
-            var res = "F(x) = " + _dualSimplex.GetObjectiveResult();
-            PrintInfo?.Invoke(this, res);
+           
             // We do some formatting data here
             for (var i = 0; i < Variables; ++i)
             {
-                PrintInfo?.Invoke(this, $" Target Coefficient# {i} : {targetCoefficientValues[i]:f3} ");
+                PrintInfo?.Invoke(this, $"x{i} : {targetCoefficientValues[i]:f3} ");
             }
+
+            // Get answer function
+            var res = "F(x) = " + _dualSimplex.GetObjectiveResult();
+            PrintInfo?.Invoke(this, res);
         }
     }
 }

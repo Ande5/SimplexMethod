@@ -46,6 +46,7 @@
     <Compile Include="InitializeSimplex.cs" />
     <Compile Include="InputData.cs" />
     <Compile Include="Interval.cs" />
+    <Compile Include="MathematicalModel.cs" />
     <Compile Include="Matrix\Matrix.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Simplex\AbstractSimplex.cs" />
