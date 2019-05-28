@@ -18,6 +18,10 @@ namespace BL
 
         public DConstraint[] Constraints => _constraints.ToArray();
 
+        /// <summary>
+        /// Чтение данных из файла
+        /// </summary>
+        /// <param name="path">Путь к файлу</param>
         public void ReadDataFile(string path)
         {
             using (var readFile = new StreamReader(path))
@@ -42,6 +46,10 @@ namespace BL
 
         public event DataInfo PrintInfo;
 
+        /// <summary>
+        /// Поиск объектов функции
+        /// </summary>
+        /// <param name="objFunction">Исходня функция</param>
         private void SearchObjFunction(string objFunction)
         {
             const RegexOptions options = RegexOptions.Multiline;
@@ -57,6 +65,10 @@ namespace BL
             Function = new Function(_dataFunction.ToArray(), functionAspiration == "max" ? Aspiration.max : Aspiration.min);
         }
 
+        /// <summary>
+        /// Поиск объектов ограничений
+        /// </summary>
+        /// <param name="input">Ограничения</param>
         private void SearchObjConstraints(string input)
         {
             const string patternBound = @"(\s[>=<]+)";
@@ -81,6 +93,11 @@ namespace BL
           
         }
 
+        /// <summary>
+        /// Определение знака неравенства ограничений
+        /// </summary>
+        /// <param name="boundMatch">Знака неравенства</param>
+        /// <returns>Значение неравенства</returns>
         private static int DefineBound(string boundMatch)
         {
             switch (boundMatch)

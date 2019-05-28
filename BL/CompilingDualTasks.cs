@@ -10,6 +10,11 @@ namespace BL
 
         public DConstraint[] Constraints => _constraints.ToArray();
 
+        /// <summary>
+        /// Формирование двойственной задачи
+        /// </summary>
+        /// <param name="function">Исходная функция прямой задачи</param>
+        /// <param name="constraintsValue">Ограничения прямой задачи</param>
         public void CompilingTasks(Function function, DConstraint[] constraintsValue)
         {
             var sizeMatrix = constraintsValue[0].GetCoefficients().Length;
@@ -33,6 +38,11 @@ namespace BL
             CompilingConstraints(newRhs, matrix);
         }
 
+        /// <summary>
+        /// Формирование ограничений для двойственной задачи
+        /// </summary>
+        /// <param name="rhs"></param>
+        /// <param name="matrix"></param>
         private void CompilingConstraints(double[] rhs, double [,] matrix)
         {
             for (int i = 0; i <= matrix.GetUpperBound(0); i++)
@@ -44,9 +54,13 @@ namespace BL
                 }
                 _constraints.Add(new DConstraint(coefficients, AbstractSimplex.LESS_THAN,rhs[i]));
             }
-
         }
 
+        /// <summary>
+        /// Конвертация границ в двойственную функцию
+        /// </summary>
+        /// <param name="constraintsValue"></param>
+        /// <returns></returns>
         private double[] ConvertRhsToFunction(DConstraint[] constraintsValue)
         {
             var index = 0;
@@ -61,6 +75,10 @@ namespace BL
             return dataFunction;
         }
 
+        /// <summary>
+        /// Транспонирование матрицы
+        /// </summary>
+        /// <param name="matrix"></param>
         private void MatrixTransposition(ref double[,] matrix)
         {
             for (int i = 0; i <= matrix.GetUpperBound(0); i++)

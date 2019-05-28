@@ -18,6 +18,9 @@ namespace BL
           
         }
 
+        /// <summary>
+        /// Нахождение интервала устойчиовтси
+        /// </summary>
         public void FindingInterval()
         {
            var lowerInterval = LowerInterval();
@@ -34,6 +37,10 @@ namespace BL
 
         public event DataInfo IntervalInfo;
 
+        /// <summary>
+        /// Нижние границы устойчивости
+        /// </summary>
+        /// <returns>Список границ</returns>
         private List<double> LowerInterval()
         {
             var lowerInterval = new List<double>();
@@ -56,6 +63,10 @@ namespace BL
             return lowerInterval;
         }
 
+        /// <summary>
+        /// Вверхние границы устойчивости
+        /// </summary>
+        /// <returns>Список границ</returns>
         private List<double> UpperInterval()
         {
             var upperInterval = new List<double>();
