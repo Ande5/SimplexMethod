@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using BL.Simplex;
 
 namespace BL
@@ -11,12 +11,12 @@ namespace BL
       
         public int Variables { get; set; }
         public int Constraints { get; set; }
+        public List<DConstraint> MatrixCoefficients { get; private set; }
 
         public InitializeSimplex(Function function, DConstraint[] constraintsValue, bool autoVariableConstraints = true)
         {
             _function = function;
             _constraintsValue = constraintsValue;
-
             Initialize(autoVariableConstraints);
         }
 
@@ -68,6 +68,7 @@ namespace BL
             while (true)
             {
                 if (_dualSimplex.Iterate() == AbstractSimplex.CONTINUE) continue;
+                MatrixCoefficients = _dualSimplex.GetConstraint();
                 break;
             }
         }

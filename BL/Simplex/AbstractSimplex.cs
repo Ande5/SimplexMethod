@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 
 namespace BL.Simplex
 {
@@ -112,7 +113,6 @@ namespace BL.Simplex
             return result;
         }
 
-
         public override string ToString()
         {
             var s = new StringBuilder();
@@ -165,6 +165,28 @@ namespace BL.Simplex
 
             return s.ToString();
         }
+
+        public List<DConstraint> GetConstraint()
+        {
+            var constraints = new List<DConstraint>();
+
+            for (int i = 0; i < m.Length - 1; i++)
+            {
+                var index = 0;
+                var coefficients = new List<double>();
+                for (int j = 0; j < m[i].Length - 1; j++ , index++)
+                {
+                    if (j >= _nonBasisVariable.Length - _basisVariable.Length)
+                    {
+                        coefficients.Add(m[i][j]*-1);
+                    }
+                }
+                constraints.Add(new DConstraint(coefficients.ToArray(), EQUAL_TO, m[i][index]));
+            }
+
+            return constraints;
+        }
+
 
         public event DataInfo SimplexInfo;
 
