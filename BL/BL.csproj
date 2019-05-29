@@ -41,12 +41,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\Extensions.cs" />
+    <Compile Include="Function.cs" />
     <Compile Include="InitializeSimplex.cs" />
+    <Compile Include="InputData.cs" />
+    <Compile Include="Interval.cs" />
+    <Compile Include="MathematicalModel.cs" />
+    <Compile Include="Matrix\Matrix.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Simplex\AbstractSimplex.cs" />
     <Compile Include="Simplex\DConstraint.cs" />
     <Compile Include="Simplex\DualSimplex.cs" />
     <Compile Include="Simplex\PrimalSimplex.cs" />
+    <Compile Include="CompilingDualTasks.cs" />
+    <Compile Include="StabilityInterval.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

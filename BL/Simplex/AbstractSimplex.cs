@@ -1,77 +1,79 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace BL.Simplex
 {
-    public abstract class AbstractSimplex
+    internal abstract class AbstractSimplex
     {
-        public static int LESS_THAN = 0;
-        public static int GREATER_THAN = 1;
-        public static int EQUAL_TO = 2;
+        public const int LESS_THAN = 0;
+        public const int GREATER_THAN = 1;
+        public const int EQUAL_TO = 2;
         /*
         public final static int GREATER_EQUAL = 3;
         public final static int LESS_EQUAL = 4;
         */
 
         public static int CONTINUE = 0;
-        public static int OPTIMAL = 1;
-        public static int UNBOUNDED = 2;
+        protected static int OPTIMAL = 1;
+        protected static int UNBOUNDED = 2;
 
-        protected bool minimize;
+        private bool _minimize;
         protected double[] objective;
-        protected double[][] constraints;
-        protected int[] equations;
-        protected double[] rhs;
+        private double[][] _constraints;
+        private int[] _equations;
+        private double[] _rhs;
 
         protected double[][] m;
-        protected int[] basisVariable;
-        protected int[] nonBasisVariable;
-        protected int[] slackVariable;
+        private int[] _basisVariable;
+        private int[] _nonBasisVariable;
+        private int[] _slackVariable;
         protected bool[] locked;
 
-        public void Init()
+        public virtual void Init()
         {
-            m = new double[constraints.Length + 1][];
-            for (var i = 0; i < constraints.Length + 1; i++)
-                m[i] = new double[objective.Length + constraints.Length + 1];
+            m = new double[_constraints.Length + 1][];
+            for (var i = 0; i < _constraints.Length + 1; i++)
+                m[i] = new double[objective.Length + _constraints.Length + 1];
 
-            for (var i = 0; i < constraints.Length; ++i)
+            for (var i = 0; i < _constraints.Length; ++i)
             {
-                for (var j = 0; j < constraints[i].Length; ++j)
-                    m[i][j] = constraints[i][j] * (equations[i] == GREATER_THAN ? -1 : 1);
+                for (var j = 0; j < _constraints[i].Length; ++j)
+                    m[i][j] = _constraints[i][j] * (_equations[i] == GREATER_THAN ? -1 : 1);
                 m[i][objective.Length + i] = 1;
-                m[i][m[i].Length - 1] = rhs[i] * (equations[i] == GREATER_THAN ? -1 : 1);
+                m[i][m[i].Length - 1] = _rhs[i] * (_equations[i] == GREATER_THAN ? -1 : 1);
             }
 
-            for (var i = 0; i < objective.Length; ++i) m[m.Length - 1][i] = objective[i] * (minimize ? 1 : -1);
-            nonBasisVariable = new int[objective.Length + constraints.Length];
-            slackVariable = new int[constraints.Length];
-            for (var i = 0; i < nonBasisVariable.Length; ++i)
+            for (var i = 0; i < objective.Length; ++i) m[m.Length - 1][i] = objective[i] * (_minimize ? 1 : -1);
+            _nonBasisVariable = new int[objective.Length + _constraints.Length];
+            _slackVariable = new int[_constraints.Length];
+            for (var i = 0; i < _nonBasisVariable.Length; ++i)
             {
-                nonBasisVariable[i] = i;
-                if (i >= objective.Length) slackVariable[i - objective.Length] = i;
+                _nonBasisVariable[i] = i;
+                if (i >= objective.Length) _slackVariable[i - objective.Length] = i;
             }
 
-            basisVariable = new int[constraints.Length];
-            for (var i = 0; i < basisVariable.Length; ++i) basisVariable[i] = slackVariable[i];
-            locked = new bool[basisVariable.Length];
+            _basisVariable = new int[_constraints.Length];
+            for (var i = 0; i < _basisVariable.Length; ++i) _basisVariable[i] = _slackVariable[i];
+            locked = new bool[_basisVariable.Length];
         }
 
-        public void SetObjective(double[] objective, bool minimize)
+        public void SetObjective(Function function)
         {
-            this.objective = objective;
-            this.minimize = minimize;
+            objective = function.DataFunction;
+            _minimize = function.Aspiration == Aspiration.min;
         }
 
         public void SetConstraints(double[][] constraints, int[] equations, double[] rhs)
         {
-            this.constraints = constraints;
-            this.equations = equations;
-            this.rhs = rhs;
+            _constraints = constraints;
+            _equations = equations;
+            _rhs = rhs;
         }
 
         protected void Pivot(int pivotRow, int pivotColumn)
         {
-            double quotient = m[pivotRow][pivotColumn];
+            var quotient = m[pivotRow][pivotColumn];
             for (int i = 0; i < m[pivotRow].Length; ++i)
             {
                 m[pivotRow][i] = m[pivotRow][i] / quotient;
@@ -89,21 +91,21 @@ namespace BL.Simplex
                     }
                 }
             }
-            basisVariable[pivotRow] = nonBasisVariable[pivotColumn];
+            _basisVariable[pivotRow] = _nonBasisVariable[pivotColumn];
         }
 
         public double GetObjectiveResult() 
-            => m[m.Length - 1][m[m.Length - 1].Length - 1] * (minimize ? -1 : 1);
+            => m[m.Length - 1][m[m.Length - 1].Length - 1] * (_minimize ? -1 : 1);
 
         public double[] GetCoefficients()
         {
-            double[] result = new double[objective.Length];
+            var result = new double[objective.Length];
 
             for (int i = 0; i < result.Length; ++i)
             {
-                for (int j = 0; j < basisVariable.Length; ++j)
+                for (int j = 0; j < _basisVariable.Length; ++j)
                 {
-                    if (i == basisVariable[j])
+                    if (i == _basisVariable[j])
                     {
                         result[i] = m[j][m[j].Length - 1];
                     }
@@ -112,22 +114,21 @@ namespace BL.Simplex
             return result;
         }
 
-
         public override string ToString()
         {
-            StringBuilder s = new StringBuilder();
+            var s = new StringBuilder();
             s.Append('\t');
-            for (int i = 0; i < nonBasisVariable.Length; ++i)
+            for (int i = 0; i < _nonBasisVariable.Length; ++i)
             {
-                if (i < (nonBasisVariable.Length - basisVariable.Length))
+                if (i < _nonBasisVariable.Length - _basisVariable.Length)
                 {
                     s.Append('x');
-                    s.Append(nonBasisVariable[i] + 1);
+                    s.Append(_nonBasisVariable[i] + 1);
                 }
                 else
                 {
                     s.Append('s');
-                    s.Append(nonBasisVariable[i] - (nonBasisVariable.Length - basisVariable.Length) + 1);
+                    s.Append(_nonBasisVariable[i] - (_nonBasisVariable.Length - _basisVariable.Length) + 1);
                 }
                 s.Append('\t');
             }
@@ -135,35 +136,77 @@ namespace BL.Simplex
 
             for (int i = 0; i < m.Length - 1; ++i)
             {
-                if (basisVariable[i] < nonBasisVariable.Length - basisVariable.Length)
+                if (_basisVariable[i] < _nonBasisVariable.Length - _basisVariable.Length)
                 {
                     s.Append('x');
-                    s.Append(basisVariable[i] + 1);
+                    s.Append(_basisVariable[i] + 1);
                 }
                 else
                 {
                     s.Append('s');
-                    s.Append(basisVariable[i] - (nonBasisVariable.Length - basisVariable.Length) + 1);
+                    s.Append(_basisVariable[i] - (_nonBasisVariable.Length - _basisVariable.Length) + 1);
                 }
                 s.Append('\t');
                 for (int j = 0; j < m[i].Length; ++j)
                 {
-                    s.Append(m[i][j]);
+                    s.Append($"{m[i][j]:f2}");
                     s.Append('\t');
                 }
                 s.Append('\n');
             }
 
-            s.Append('Z');
+            s.Append("F(x)");
             s.Append('\t');
             for (int i = 0; i < m[m.Length - 1].Length; ++i)
             {
-                s.Append(m[m.Length - 1][i]);
+                s.Append($"{m[m.Length - 1][i]:f2}");
                 s.Append('\t');
             }
             s.Append('\n');
 
             return s.ToString();
+        }
+
+        public double[] GetShadowEstimates()
+        {
+            var index = 0;
+            var size = _nonBasisVariable.Length - _basisVariable.Length;
+            var shadowEstimates = new double[size];
+            for (int i = size; i < m[m.Length - 1].Length - 1; i++, index++)
+            {
+                 shadowEstimates[index] = m[m.Length - 1][i];
+            }
+
+            return shadowEstimates;
+        }
+
+        public List<DConstraint> GetConstraint()
+        {
+            var constraints = new List<DConstraint>();
+
+            for (int i = 0; i < m.Length - 1; i++)
+            {
+                var index = 0;
+                var coefficients = new List<double>();
+                for (int j = 0; j < m[i].Length - 1; j++ , index++)
+                {
+                    if (j >= _nonBasisVariable.Length - _basisVariable.Length)
+                    {
+                        coefficients.Add(m[i][j]*-1);
+                    }
+                }
+                constraints.Add(new DConstraint(coefficients.ToArray(), EQUAL_TO, m[i][index]));
+            }
+
+            return constraints;
+        }
+
+
+        public event DataInfo SimplexInfo;
+
+        protected void OnSimplexInfo(string data)
+        {
+            SimplexInfo?.Invoke(this, data);
         }
     }
 }
