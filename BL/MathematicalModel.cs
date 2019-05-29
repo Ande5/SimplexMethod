@@ -63,14 +63,10 @@ namespace BL
         {
             switch (equations)
             {
-                case 0:
-                    return " <= ";
-                case 1:
-                    return " >= ";
-                case 2:
-                    return " = ";
-                default:
-                    return " = ";
+                case AbstractSimplex.LESS_THAN: return " <= ";
+                case AbstractSimplex.GREATER_THAN: return " >= ";
+                case AbstractSimplex.EQUAL_TO: return " = ";
+                default: return " = ";
             }
         }
     }

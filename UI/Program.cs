@@ -25,6 +25,7 @@ namespace UI
             var rhsList = inputData.Constraints.Select(x => x.GetRhs());
             var stabilityInterval = new StabilityInterval(simplex.MatrixCoefficients, rhsList.ToArray());
             stabilityInterval.IntervalInfo += PrintInfo;
+            Console.WriteLine(stabilityInterval.PrintIvertMatrix());
             stabilityInterval.FindingInterval();
 
             //Формирование двойственной задачи

@@ -88,5 +88,23 @@ namespace BL
 
             return upperInterval;
         }
+
+
+        public string PrintIvertMatrix()
+        {
+            var invertMatrix = string.Empty;
+            foreach (var coefficient in _matrixCoefficients)
+            {
+
+                for (int k = 0; k < coefficient.GetCoefficients().Length; k++)
+                {
+                    invertMatrix += $"  {coefficient.GetCoefficients()[k]:f2}";
+                }
+
+                invertMatrix += Environment.NewLine;
+            }
+
+            return invertMatrix;
+        }
     }
 }

@@ -13,24 +13,41 @@ namespace BL
         public void CompilingTasks(Function function, DConstraint[] constraintsValue)
         {
             var sizeMatrix = constraintsValue[0].GetCoefficients().Length;
+            var equations = new int[sizeMatrix];
             var matrix = new double[sizeMatrix,sizeMatrix];
-
-            for(int i = 0; i < constraintsValue.Length; i++)
+           
+            for (int i = 0; i < constraintsValue.Length; i++)
             {
                 for (int j = 0; j < sizeMatrix; j++)
                 {
                     matrix[i, j] = constraintsValue[i].GetCoefficients()[j];
                 }
+
+                equations[i] = constraintsValue[i].GetEquations();
             }
 
             Function = new Function(ConvertRhsToFunction(constraintsValue),
                 function.Aspiration == Aspiration.max ? Aspiration.min : Aspiration.max);
 
             var newRhs = function.DataFunction;
-
+            
             MatrixTransposition(ref matrix);
 
-            CompilingConstraints(newRhs, matrix);
+            CompilingConstraints(newRhs, equations, matrix);
+        }
+
+        private int InvertEquations(int equations)
+        {
+            switch (equations)
+            {
+                case AbstractSimplex.LESS_THAN:
+                    return AbstractSimplex.GREATER_THAN;
+                case AbstractSimplex.GREATER_THAN:
+                    return AbstractSimplex.LESS_THAN;
+                case AbstractSimplex.EQUAL_TO:
+                    return AbstractSimplex.EQUAL_TO;
+                default: return AbstractSimplex.EQUAL_TO;
+            }
         }
 
         /// <summary>
@@ -38,7 +55,7 @@ namespace BL
         /// </summary>
         /// <param name="rhs"></param>
         /// <param name="matrix"></param>
-        private void CompilingConstraints(double[] rhs, double [,] matrix)
+        private void CompilingConstraints(double[] rhs, int[] equations, double [,] matrix)
         {
             var constraints = new List<DConstraint>();
             for (int i = 0; i <= matrix.GetUpperBound(0); i++)
@@ -49,7 +66,7 @@ namespace BL
                     coefficients[j] = matrix[i, j];
                 }
 
-                constraints.Add(new DConstraint(coefficients, AbstractSimplex.LESS_THAN, rhs[i]));
+                constraints.Add(new DConstraint(coefficients, InvertEquations(equations[i]), rhs[i]));
             }
 
             Constraints = constraints.ToArray();
