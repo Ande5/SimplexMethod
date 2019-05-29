@@ -73,17 +73,23 @@ namespace BL
 
             foreach (var coefficient in _matrixCoefficients)
             {
-                var deltaB = new double[coefficient.GetCoefficients().Length];
-                for (int k = 0; k < coefficient.GetCoefficients().Length; k++)
+                try
                 {
-                    if (coefficient.GetCoefficients()[k] < 0)
+                    var deltaB = new double[coefficient.GetCoefficients().Length];
+                    for (int k = 0; k < coefficient.GetCoefficients().Length; k++)
                     {
-                        var deltaBl = _matrixCoefficients[k].GetRhs() / coefficient.GetCoefficients()[k];
-                        deltaB[k] = deltaBl;
+                        if (coefficient.GetCoefficients()[k] < 0)
+                        {
+                            var deltaBl = _matrixCoefficients[k].GetRhs() / coefficient.GetCoefficients()[k];
+                            deltaB[k] = deltaBl;
+                        }
                     }
+                    upperInterval.Add(deltaB.Where(min => min < 0).Max());
                 }
-
-                upperInterval.Add(deltaB.Where(min => min < 0).Max());
+                catch
+                {
+                    upperInterval.Add(0);
+                }
             }
 
             return upperInterval;

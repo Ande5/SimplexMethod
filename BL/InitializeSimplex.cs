@@ -109,7 +109,7 @@ namespace BL
 
             // Get answer function
             var res = "F(x) = " + _dualSimplex.GetObjectiveResult();
-            str += "F(x) = " + _dualSimplex.GetObjectiveResult() + Environment.NewLine;
+            str += $"F(x) = {_dualSimplex.GetObjectiveResult():f2}" + Environment.NewLine;
             PrintInfo?.Invoke(this, str);
         }
     }

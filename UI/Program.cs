@@ -11,7 +11,7 @@ namespace UI
             Console.Title = "Simplex";
 
             var inputData = new InputData();
-            inputData.ReadDataFile("Simplex Variant_1.txt");
+            inputData.ReadDataFile("Simplex Variant_5.txt");
 
             //Прямой симплекс метод
             var simplex = new InitializeSimplex(inputData.Function, inputData.Constraints);
@@ -39,11 +39,11 @@ namespace UI
             Console.WriteLine("\n///Двойственная задача///\n");
             Console.WriteLine(compilingDualTasks.ToString());
 
-            //var dualSimplex = new InitializeSimplex(compilingDualTasks.Function, compilingDualTasks.Constraints);
-            //dualSimplex.PrintInfo += PrintInfo;
-            //Console.WriteLine("///Симпликс-таблица///");
-            //Console.WriteLine(dualSimplex.ResultSimplexTabel);
-            //dualSimplex.AssertResult();
+            var dualSimplex = new InitializeSimplex(compilingDualTasks.Function, compilingDualTasks.Constraints);
+            dualSimplex.PrintInfo += PrintInfo;
+            Console.WriteLine("///Симпликс-таблица///");
+            Console.WriteLine(dualSimplex.ResultSimplexTabel);
+            dualSimplex.AssertResult();
 
             Console.ReadKey();
         }
