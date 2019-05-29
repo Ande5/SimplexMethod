@@ -33,7 +33,8 @@ namespace BL.Simplex
                 {
                     if (!(m[m.Length - 1][i] < 0)) continue;
                     // Start primal
-                    Console.WriteLine("Continue with primal simplex");
+                    //Console.WriteLine("Continue with primal simplex");
+                    OnSimplexInfo("///Решение прямым симплекс методом///\n");
                     _primal = true;
                     return CONTINUE;
                 }

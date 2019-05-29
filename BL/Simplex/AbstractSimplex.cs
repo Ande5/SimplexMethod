@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace BL.Simplex
@@ -164,6 +165,19 @@ namespace BL.Simplex
             s.Append('\n');
 
             return s.ToString();
+        }
+
+        public double[] GetShadowEstimates()
+        {
+            var index = 0;
+            var size = _nonBasisVariable.Length - _basisVariable.Length;
+            var shadowEstimates = new double[size];
+            for (int i = size; i < m[m.Length - 1].Length - 1; i++, index++)
+            {
+                 shadowEstimates[index] = m[m.Length - 1][i];
+            }
+
+            return shadowEstimates;
         }
 
         public List<DConstraint> GetConstraint()

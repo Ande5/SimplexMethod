@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using BL.Simplex;
 
 namespace BL
@@ -9,7 +11,11 @@ namespace BL
         private DualSimplex _dualSimplex;
 
         public int Variables { get; set; }
+
         public new int Constraints { get; set; }
+
+        public double[] ShadowEstimates { get; private set; }
+
         public List<DConstraint> MatrixCoefficients { get; private set; }
 
         public InitializeSimplex(Function function, DConstraint[] constraintsValue, bool autoVariableConstraints = true)
@@ -70,11 +76,15 @@ namespace BL
             {
                 if (_dualSimplex.Iterate() == AbstractSimplex.CONTINUE) continue;
                 MatrixCoefficients = _dualSimplex.GetConstraint();
+                ShadowEstimates = _dualSimplex.GetShadowEstimates();
                 break;
             }
         }
 
         public event DataInfo PrintInfo;
+
+        public string PrintShadowEstimates() 
+            => ShadowEstimates.Aggregate("y = (", (current, shadowEstimate) => current + $" {shadowEstimate:f2};") + ")\n";
 
         /// <summary>
         /// Вывод результата

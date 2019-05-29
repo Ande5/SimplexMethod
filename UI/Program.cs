@@ -8,6 +8,8 @@ namespace UI
     {
         static void Main(string[] args)
         {
+            Console.Title = "Simplex";
+
             var inputData = new InputData();
             inputData.ReadDataFile("Simplex Variant_1.txt");
 
@@ -19,13 +21,16 @@ namespace UI
             Console.WriteLine("///Симпликс-таблица///");
             Console.WriteLine(simplex.ResultSimplexTabel);
             simplex.AssertResult();
+            Console.WriteLine("///Теневые оценки///\n");
+            Console.WriteLine(simplex.PrintShadowEstimates());
 
             //Получение интервалов устойчивости в прямой задаче
-            Console.WriteLine("///Интервалы устойчивости///\n");
             var rhsList = inputData.Constraints.Select(x => x.GetRhs());
             var stabilityInterval = new StabilityInterval(simplex.MatrixCoefficients, rhsList.ToArray());
             stabilityInterval.IntervalInfo += PrintInfo;
-            Console.WriteLine(stabilityInterval.PrintIvertMatrix());
+            Console.WriteLine("///Обратная матрица A^-1///\n");
+            Console.WriteLine(stabilityInterval.PrintInvertMatrix());
+            Console.WriteLine("///Интервалы устойчивости///\n");
             stabilityInterval.FindingInterval();
 
             //Формирование двойственной задачи
@@ -34,10 +39,11 @@ namespace UI
             Console.WriteLine("\n///Двойственная задача///\n");
             Console.WriteLine(compilingDualTasks.ToString());
 
-            var dualSimplex = new InitializeSimplex(compilingDualTasks.Function, compilingDualTasks.Constraints);
-            dualSimplex.PrintInfo += PrintInfo;
-            Console.WriteLine(dualSimplex.ResultSimplexTabel);
-            dualSimplex.AssertResult();
+            //var dualSimplex = new InitializeSimplex(compilingDualTasks.Function, compilingDualTasks.Constraints);
+            //dualSimplex.PrintInfo += PrintInfo;
+            //Console.WriteLine("///Симпликс-таблица///");
+            //Console.WriteLine(dualSimplex.ResultSimplexTabel);
+            //dualSimplex.AssertResult();
 
             Console.ReadKey();
         }

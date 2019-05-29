@@ -90,7 +90,7 @@ namespace BL
         }
 
 
-        public string PrintIvertMatrix()
+        public string PrintInvertMatrix()
         {
             var invertMatrix = string.Empty;
             foreach (var coefficient in _matrixCoefficients)
