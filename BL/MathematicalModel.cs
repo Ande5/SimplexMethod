@@ -31,6 +31,17 @@ namespace BL
         public override string ToString()
         {
             var model = new StringBuilder();
+
+            model.Append("F(x) ="); int index = 1;
+            foreach (var function in _function.DataFunction)
+            {
+                if (function > 0 && index != 1) model.Append($" + {function}*x{index}");
+                else model.Append($" {function}*x{index}");
+                index++;
+            }
+
+            model.Append($" -> {_function.Aspiration.ToString()}\n");
+
             foreach (var constraint in _constraintsValue)
             {
                 for (int i = 0; i < constraint.GetCoefficients().Length; i++)
@@ -44,17 +55,6 @@ namespace BL
                 model.Append(constraint.GetRhs());
                 model.Append('\n');
             }
-
-            model.Append("F(x) =");
-            int index = 1;
-            foreach (var function in _function.DataFunction)
-            {
-                if (function > 0 && index != 1) model.Append($" + {function}*x{index}");
-                else model.Append($" {function}*x{index}");
-                index++;
-            }
-
-            model.Append($" -> {_function.Aspiration.ToString()}");
 
             return model.ToString();
         }

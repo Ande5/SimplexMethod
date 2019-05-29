@@ -9,33 +9,38 @@ namespace UI
         static void Main(string[] args)
         {
             var inputData = new InputData();
-            inputData.PrintInfo += InputData_PrintInfo;
             inputData.ReadDataFile("Simplex Variant_1.txt");
 
-            var initializeSimplex = new InitializeSimplex(inputData.Function, inputData.Constraints);
-            initializeSimplex.PrintInfo += InputData_PrintInfo;
-            Console.WriteLine(initializeSimplex.SimplexTabel);
-            initializeSimplex.AssertResult();
-            Console.WriteLine(initializeSimplex.ToString());
+            //Прямой симплекс метод
+            var simplex = new InitializeSimplex(inputData.Function, inputData.Constraints);
+            simplex.PrintInfo += PrintInfo;
+            Console.WriteLine("///Прямая задача///\n");
+            Console.WriteLine(simplex.ToString());
+            Console.WriteLine("///Симпликс-таблица///");
+            Console.WriteLine(simplex.ResultSimplexTabel);
+            simplex.AssertResult();
 
-            var result = initializeSimplex.MatrixCoefficients;
-            var enumerable = inputData.Constraints.Select(x => x.GetRhs());
-            var stabilityInterval = new StabilityInterval(result, enumerable.ToArray());
-            stabilityInterval.IntervalInfo += InputData_PrintInfo;
+            //Получение интервалов устойчивости в прямой задаче
+            Console.WriteLine("///Интервалы устойчивости///\n");
+            var rhsList = inputData.Constraints.Select(x => x.GetRhs());
+            var stabilityInterval = new StabilityInterval(simplex.MatrixCoefficients, rhsList.ToArray());
+            stabilityInterval.IntervalInfo += PrintInfo;
             stabilityInterval.FindingInterval();
 
+            //Формирование двойственной задачи
             var compilingDualTasks = new CompilingDualTasks();
             compilingDualTasks.CompilingTasks(inputData.Function, inputData.Constraints);
+            Console.WriteLine("\n///Двойственная задача///\n");
             Console.WriteLine(compilingDualTasks.ToString());
 
-            var initializeSimplex1 = new InitializeSimplex(compilingDualTasks.Function, compilingDualTasks.Constraints);
-            initializeSimplex1.PrintInfo += InputData_PrintInfo;
-            Console.WriteLine(initializeSimplex1.SimplexTabel);
-            initializeSimplex1.AssertResult();
+            var dualSimplex = new InitializeSimplex(compilingDualTasks.Function, compilingDualTasks.Constraints);
+            dualSimplex.PrintInfo += PrintInfo;
+            Console.WriteLine(dualSimplex.ResultSimplexTabel);
+            dualSimplex.AssertResult();
 
             Console.ReadKey();
         }
 
-        private static void InputData_PrintInfo(object sender, string data) => Console.WriteLine(data);
+        private static void PrintInfo(object sender, string data) => Console.WriteLine(data);
     }
 }

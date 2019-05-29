@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using BL.Simplex;
 
 namespace BL
@@ -30,7 +31,7 @@ namespace BL
         private void InitDualSimplex()
         {
             _dualSimplex = new DualSimplex();
-            _dualSimplex.SimplexInfo += DualSimplex_SimplexInfo;
+            _dualSimplex.SimplexInfo += SimplexInfo;
             _dualSimplex.SetObjective(_function);
 
             var constraintArray = new double[_constraintsValue.Length][];
@@ -55,7 +56,13 @@ namespace BL
 
         public string SimplexTabel { get; private set; }
 
-        private void DualSimplex_SimplexInfo(object sender, string data) => SimplexTabel += '\n'+ data;
+        public string ResultSimplexTabel { get; private set; }
+
+        private void SimplexInfo(object sender, string data)
+        {
+            SimplexTabel += '\n' + data;
+            ResultSimplexTabel = '\n' + data;
+        } 
 
         private void IterationSolution()
         {
@@ -76,16 +83,24 @@ namespace BL
         {
             // Get coefficients of objective function from simplex
             var targetCoefficientValues = _dualSimplex.GetCoefficients();
-           
+
+            var str = "///Результат решения симплекс-методом///\n";
+
             // We do some formatting data here
+            str += "\nx = (";
             for (var i = 0; i < Variables; ++i)
             {
-                PrintInfo?.Invoke(this, $"x{i} : {targetCoefficientValues[i]:f3} ");
+              //  str += $"x{i+1}: {targetCoefficientValues[i]:f2}\n";
+                str += $" {targetCoefficientValues[i]:f2};";
+                // PrintInfo?.Invoke(this, $" x{i} : {targetCoefficientValues[i]:f3} ");
             }
+
+            str += ") ";
 
             // Get answer function
             var res = "F(x) = " + _dualSimplex.GetObjectiveResult();
-            PrintInfo?.Invoke(this, res);
+            str += "F(x) = " + _dualSimplex.GetObjectiveResult() + Environment.NewLine;
+            PrintInfo?.Invoke(this, str);
         }
     }
 }
