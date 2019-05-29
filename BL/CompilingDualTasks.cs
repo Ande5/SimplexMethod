@@ -3,13 +3,8 @@ using BL.Simplex;
 
 namespace BL
 {
-    public class CompilingDualTasks
+    public class CompilingDualTasks:MathematicalModel
     {
-        public Function Function { get; private set; }
-        private readonly List<DConstraint> _constraints = new List<DConstraint>();
-
-        public DConstraint[] Constraints => _constraints.ToArray();
-
         /// <summary>
         /// Формирование двойственной задачи
         /// </summary>
@@ -45,6 +40,7 @@ namespace BL
         /// <param name="matrix"></param>
         private void CompilingConstraints(double[] rhs, double [,] matrix)
         {
+            var constraints = new List<DConstraint>();
             for (int i = 0; i <= matrix.GetUpperBound(0); i++)
             {
                 var coefficients = new double[matrix.GetUpperBound(0)+1];
@@ -52,8 +48,11 @@ namespace BL
                 {
                     coefficients[j] = matrix[i, j];
                 }
-                _constraints.Add(new DConstraint(coefficients, AbstractSimplex.LESS_THAN,rhs[i]));
+
+                constraints.Add(new DConstraint(coefficients, AbstractSimplex.LESS_THAN, rhs[i]));
             }
+
+            Constraints = constraints.ToArray();
         }
 
         /// <summary>

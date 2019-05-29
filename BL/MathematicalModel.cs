@@ -3,12 +3,26 @@ using BL.Simplex;
 
 namespace BL
 {
-    public class MathematicalModel
+    public abstract class MathematicalModel
     {
-        private readonly Function _function;
-        private readonly DConstraint[] _constraintsValue;
+        protected Function _function;
+        protected DConstraint[] _constraintsValue;
 
-        public MathematicalModel(Function function, DConstraint[] constraintsValue)
+        public Function Function
+        {
+            get => _function;
+            protected set => _function = value;
+        }
+
+        public DConstraint[] Constraints
+        {
+            get => _constraintsValue;
+            protected set => _constraintsValue = value;
+        }
+
+        protected MathematicalModel() {}
+
+        protected MathematicalModel(Function function, DConstraint[] constraintsValue)
         {
             _function = function;
             _constraintsValue = constraintsValue;

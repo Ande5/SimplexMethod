@@ -16,6 +16,7 @@ namespace UI
             initializeSimplex.PrintInfo += InputData_PrintInfo;
             Console.WriteLine(initializeSimplex.SimplexTabel);
             initializeSimplex.AssertResult();
+            Console.WriteLine(initializeSimplex.ToString());
 
             var result = initializeSimplex.MatrixCoefficients;
             var enumerable = inputData.Constraints.Select(x => x.GetRhs());
@@ -25,9 +26,8 @@ namespace UI
 
             var compilingDualTasks = new CompilingDualTasks();
             compilingDualTasks.CompilingTasks(inputData.Function, inputData.Constraints);
-            MathematicalModel mathematical = new MathematicalModel(compilingDualTasks.Function, compilingDualTasks.Constraints);
-            var s = mathematical.ToString();
-            Console.WriteLine(s);
+            Console.WriteLine(compilingDualTasks.ToString());
+
             var initializeSimplex1 = new InitializeSimplex(compilingDualTasks.Function, compilingDualTasks.Constraints);
             initializeSimplex1.PrintInfo += InputData_PrintInfo;
             Console.WriteLine(initializeSimplex1.SimplexTabel);

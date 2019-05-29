@@ -3,22 +3,16 @@ using BL.Simplex;
 
 namespace BL
 {
-    public class InitializeSimplex
+    public class InitializeSimplex: MathematicalModel
     {
         private DualSimplex _dualSimplex;
-        private readonly Function _function;
-        private readonly DConstraint[] _constraintsValue;
-      
+
         public int Variables { get; set; }
-        public int Constraints { get; set; }
+        public new int Constraints { get; set; }
         public List<DConstraint> MatrixCoefficients { get; private set; }
 
         public InitializeSimplex(Function function, DConstraint[] constraintsValue, bool autoVariableConstraints = true)
-        {
-            _function = function;
-            _constraintsValue = constraintsValue;
-            Initialize(autoVariableConstraints);
-        }
+            : base(function, constraintsValue) => Initialize(autoVariableConstraints);
 
         private void Initialize(bool autoVariableConstraints)
         {
