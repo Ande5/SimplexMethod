@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace BL.Simplex
@@ -159,12 +160,136 @@ namespace BL.Simplex
             s.Append('\t');
             for (int i = 0; i < m[m.Length - 1].Length; ++i)
             {
-                s.Append($"{m[m.Length - 1][i]:f2}");
-                s.Append('\t');
+                if (m[m.Length - 1].Length -1 == i && _minimize)
+                {
+                    s.Append($"{m[m.Length - 1][i] * -1:f2}");
+                    s.Append('\t');
+                }
+                else
+                {
+                    s.Append($"{m[m.Length - 1][i]:f2}");
+                    s.Append('\t');
+                }
             }
             s.Append('\n');
-
             return s.ToString();
+        }
+
+
+        protected string ClassicMatrix()
+        {
+            var buffer = new Elements[m.Length - 1];
+            var simplexMatrix = new StringBuilder();
+
+            CreateBuffer(ref buffer);
+            simplexMatrix.Append('\t');
+            for (int i = 0; i < _nonBasisVariable.Length; ++i)
+            {
+                if (i < _nonBasisVariable.Length - _basisVariable.Length)
+                {
+                    var str = "x" + $"{_nonBasisVariable[i] + 1}";
+                    if (!buffer.Contains(new Elements(str, _nonBasisVariable[i] + 1)))
+                    {
+                        simplexMatrix.Append(str);
+                        simplexMatrix.Append('\t');
+                    }
+                }
+                else
+                {
+                    var str = "s" + $"{_nonBasisVariable[i] - (_nonBasisVariable.Length - _basisVariable.Length) + 1}";
+                    if (!buffer.Contains(new Elements(str, _nonBasisVariable[i] + 1)))
+                    {
+                        simplexMatrix.Append(str);
+                        simplexMatrix.Append('\t');
+                    }
+                }
+                
+            }
+            simplexMatrix.Append('\n');
+
+
+            for (int i = 0; i < m.Length - 1; ++i)
+            {
+                if (_basisVariable[i] < _nonBasisVariable.Length - _basisVariable.Length)
+                {
+                    simplexMatrix.Append('x');
+                    simplexMatrix.Append(_basisVariable[i] + 1);
+                }
+                else
+                {
+                    simplexMatrix.Append('s');
+                    simplexMatrix.Append(_basisVariable[i] - (_nonBasisVariable.Length - _basisVariable.Length) + 1);
+                }
+                simplexMatrix.Append('\t');
+
+                for (int j = 0; j < m[i].Length; ++j)
+                {
+                    var element = buffer.FirstOrDefault(b => b.ElementValue == j + 1).Element;
+                    if (element == null)
+                    {
+                        simplexMatrix.Append($"{m[i][j]:f2}");
+                        simplexMatrix.Append('\t');
+                    }
+                }
+
+                simplexMatrix.Append('\n');
+            }
+
+            simplexMatrix.Append("L");
+            simplexMatrix.Append('\t');
+            for (int i = 0; i < m[m.Length - 1].Length; ++i)
+            {
+                var element = buffer.FirstOrDefault(b => b.ElementValue == i + 1).Element;
+
+                if (m[m.Length - 1].Length - 1 == i && _minimize && element == null)
+                {
+                    simplexMatrix.Append($"{m[m.Length - 1][i] * -1:f2}");
+                    simplexMatrix.Append('\t');
+                }
+                else if(element == null)
+                {
+                    simplexMatrix.Append($"{m[m.Length - 1][i]:f2}");
+                    simplexMatrix.Append('\t');
+                }
+            }
+            simplexMatrix.Append('\n');
+            return simplexMatrix.ToString();
+        }
+
+        private void CreateBuffer(ref Elements[] buffer)
+        {
+            for (int i = 0; i < m.Length - 1; ++i)
+            {
+                if (_basisVariable[i] < _nonBasisVariable.Length - _basisVariable.Length)
+                {
+                    buffer[i].Element = "x" + $"{_basisVariable[i] + 1}";
+                    buffer[i].ElementValue = _basisVariable[i] + 1;
+                }
+                else
+                {
+                    buffer[i].Element = "s" + $"{_basisVariable[i] - (_nonBasisVariable.Length - _basisVariable.Length) + 1}";
+                    buffer[i].ElementValue = _basisVariable[i] + 1;
+                }
+            }
+        }
+
+        struct Elements : IComparable
+        {
+            public string Element;
+            public int ElementValue;
+
+            public Elements(string element, int elementValue)
+            {
+                Element = element;
+                ElementValue = elementValue;
+            }
+
+            public int CompareTo(object sender)
+            {
+                if (sender is Elements elements)
+                    return CompareTo(elements.ElementValue);
+                throw new Exception("Невозможно сравнить два объекта");
+            }
         }
 
         public double[] GetShadowEstimates()

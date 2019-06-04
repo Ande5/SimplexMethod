@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using BL.Simplex;
+﻿using BL.Simplex;
+using System.Collections.Generic;
 
 namespace BL
 {

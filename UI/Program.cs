@@ -11,7 +11,7 @@ namespace UI
             Console.Title = "Simplex";
 
             var inputData = new InputData();
-            inputData.ReadDataFile("Simplex Variant_5.txt");
+            inputData.ReadDataFile("Simplex Variant.txt");
 
             //Прямой симплекс метод
             var simplex = new InitializeSimplex(inputData.Function, inputData.Constraints);
@@ -19,7 +19,7 @@ namespace UI
             Console.WriteLine("///Прямая задача///\n");
             Console.WriteLine(simplex.ToString());
             Console.WriteLine("///Симпликс-таблица///");
-            Console.WriteLine(simplex.ResultSimplexTabel);
+            Console.WriteLine(simplex.SimplexTabel);
             simplex.AssertResult();
             Console.WriteLine("///Теневые оценки///\n");
             Console.WriteLine(simplex.PrintShadowEstimates());
@@ -42,7 +42,7 @@ namespace UI
             var dualSimplex = new InitializeSimplex(compilingDualTasks.Function, compilingDualTasks.Constraints);
             dualSimplex.PrintInfo += PrintInfo;
             Console.WriteLine("///Симпликс-таблица///");
-            Console.WriteLine(dualSimplex.ResultSimplexTabel);
+            Console.WriteLine(dualSimplex.SimplexTabel);
             dualSimplex.AssertResult();
 
             Console.ReadKey();
