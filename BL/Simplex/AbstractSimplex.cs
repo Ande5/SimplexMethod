@@ -183,93 +183,48 @@ namespace BL.Simplex
 
             CreateBuffer(ref buffer);
             simplexMatrix.Append('\t');
-            for (int i = 0; i < _nonBasisVariable.Length; ++i)
+  
+            foreach (var variable in _nonBasisVariable)
             {
-                if (i < _nonBasisVariable.Length - _basisVariable.Length)
-                {
-                    var str = "x" + $"{_nonBasisVariable[i] + 1}";
-                    if (!buffer.Contains(new Elements(str, _nonBasisVariable[i] + 1)))
-                    {
-                        simplexMatrix.Append(str);
-                        simplexMatrix.Append('\t');
-                    }
-                }
-                else
-                {
-                    var str = "s" + $"{_nonBasisVariable[i] - (_nonBasisVariable.Length - _basisVariable.Length) + 1}";
-                    if (!buffer.Contains(new Elements(str, _nonBasisVariable[i] + 1)))
-                    {
-                        simplexMatrix.Append(str);
-                        simplexMatrix.Append('\t');
-                    }
-                }
-                
+                var str = "x" + $"{variable + 1}";
+                if (buffer.Contains(new Elements(str, variable + 1))) continue;
+                simplexMatrix.Append(str + '\t');
             }
-            simplexMatrix.Append('\n');
 
+            simplexMatrix.Append('\n');
 
             for (int i = 0; i < m.Length - 1; ++i)
             {
-                if (_basisVariable[i] < _nonBasisVariable.Length - _basisVariable.Length)
-                {
-                    simplexMatrix.Append('x');
-                    simplexMatrix.Append(_basisVariable[i] + 1);
-                }
-                else
-                {
-                    simplexMatrix.Append('s');
-                    simplexMatrix.Append(_basisVariable[i] - (_nonBasisVariable.Length - _basisVariable.Length) + 1);
-                }
-                simplexMatrix.Append('\t');
+                simplexMatrix.Append('x' + $"{_basisVariable[i] + 1}"+'\t');
 
                 for (int j = 0; j < m[i].Length; ++j)
                 {
-                    var element = buffer.FirstOrDefault(b => b.ElementValue == j + 1).Element;
-                    if (element == null)
-                    {
-                        simplexMatrix.Append($"{m[i][j]:f2}");
-                        simplexMatrix.Append('\t');
-                    }
+                    if (buffer.FirstOrDefault(b => b.ElementValue == j + 1).Element == null) 
+                    simplexMatrix.Append($"{m[i][j]:f2}"+ '\t');
                 }
-
                 simplexMatrix.Append('\n');
             }
 
-            simplexMatrix.Append("L");
-            simplexMatrix.Append('\t');
+            simplexMatrix.Append("F(x)"+ '\t');
+
             for (int i = 0; i < m[m.Length - 1].Length; ++i)
             {
                 var element = buffer.FirstOrDefault(b => b.ElementValue == i + 1).Element;
-
                 if (m[m.Length - 1].Length - 1 == i && _minimize && element == null)
-                {
-                    simplexMatrix.Append($"{m[m.Length - 1][i] * -1:f2}");
-                    simplexMatrix.Append('\t');
-                }
-                else if(element == null)
-                {
-                    simplexMatrix.Append($"{m[m.Length - 1][i]:f2}");
-                    simplexMatrix.Append('\t');
-                }
+                    simplexMatrix.Append($"{m[m.Length - 1][i] * -1:f2}" + '\t');
+                else if (element == null) simplexMatrix.Append($"{m[m.Length - 1][i]:f2}" + '\t');
             }
+
             simplexMatrix.Append('\n');
             return simplexMatrix.ToString();
         }
 
         private void CreateBuffer(ref Elements[] buffer)
         {
-            for (int i = 0; i < m.Length - 1; ++i)
+            for (var i = 0; i < m.Length - 1; ++i)
             {
-                if (_basisVariable[i] < _nonBasisVariable.Length - _basisVariable.Length)
-                {
-                    buffer[i].Element = "x" + $"{_basisVariable[i] + 1}";
-                    buffer[i].ElementValue = _basisVariable[i] + 1;
-                }
-                else
-                {
-                    buffer[i].Element = "s" + $"{_basisVariable[i] - (_nonBasisVariable.Length - _basisVariable.Length) + 1}";
-                    buffer[i].ElementValue = _basisVariable[i] + 1;
-                }
+                buffer[i].Element = "x" + $"{_basisVariable[i] + 1}";
+                buffer[i].ElementValue = _basisVariable[i] + 1;
             }
         }
 
@@ -328,6 +283,13 @@ namespace BL.Simplex
 
 
         public event DataInfo SimplexInfo;
+
+        public event DataInfo ClassicSimplexInfo;
+
+        protected void OnClassicSimplexInfo(string data)
+        {
+            ClassicSimplexInfo?.Invoke(this, data);
+        }
 
         protected void OnSimplexInfo(string data)
         {

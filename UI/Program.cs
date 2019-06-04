@@ -18,8 +18,10 @@ namespace UI
             simplex.PrintInfo += PrintInfo;
             Console.WriteLine("///Прямая задача///\n");
             Console.WriteLine(simplex.ToString());
-            Console.WriteLine("///Симпликс-таблица///");
-            Console.WriteLine(simplex.SimplexTabel);
+            Console.WriteLine("///Классическая симпликс-таблица///");
+            Console.WriteLine(simplex.ResultClassicSimplexTabel);
+            Console.WriteLine("///Развернутая симпликс-таблица///");
+            Console.WriteLine(simplex.ResultSimplexTabel);
             simplex.AssertResult();
             Console.WriteLine("///Теневые оценки///\n");
             Console.WriteLine(simplex.PrintShadowEstimates());
@@ -41,8 +43,10 @@ namespace UI
 
             var dualSimplex = new InitializeSimplex(compilingDualTasks.Function, compilingDualTasks.Constraints);
             dualSimplex.PrintInfo += PrintInfo;
-            Console.WriteLine("///Симпликс-таблица///");
-            Console.WriteLine(dualSimplex.SimplexTabel);
+            Console.WriteLine("///Классическая симпликс-таблица///");
+            Console.WriteLine(dualSimplex.ResultClassicSimplexTabel);
+            Console.WriteLine("///Развернутая симпликс-таблица///");
+            Console.WriteLine(dualSimplex.ResultSimplexTabel);
             dualSimplex.AssertResult();
 
             Console.ReadKey();

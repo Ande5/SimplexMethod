@@ -61,7 +61,7 @@
 
             Pivot(pr, pc);
             OnSimplexInfo(ToString());
-            OnSimplexInfo(ClassicMatrix());
+            OnClassicSimplexInfo(ClassicMatrix());
             return CONTINUE;
         }
     }

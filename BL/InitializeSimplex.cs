@@ -37,6 +37,7 @@ namespace BL
         {
             _dualSimplex = new DualSimplex();
             _dualSimplex.SimplexInfo += SimplexInfo;
+            _dualSimplex.ClassicSimplexInfo += ClassicSimplexInfo;
             _dualSimplex.SetObjective(_function);
 
             var constraintArray = new double[_constraintsValue.Length][];
@@ -61,13 +62,23 @@ namespace BL
 
         public string SimplexTabel { get; private set; }
 
+        public string ClassicSimplexTabel { get; private set; }
+
         public string ResultSimplexTabel { get; private set; }
+
+        public string ResultClassicSimplexTabel { get; private set; }
 
         private void SimplexInfo(object sender, string data)
         {
             SimplexTabel += '\n' + data;
             ResultSimplexTabel = '\n' + data;
-        } 
+        }
+
+        private void ClassicSimplexInfo(object sender, string data)
+        {
+            ClassicSimplexTabel += '\n' + data;
+            ResultClassicSimplexTabel = '\n' + data;
+        }
 
         private void IterationSolution()
         {
