@@ -229,17 +229,25 @@ namespace BL.Simplex
             }
         }
 
+        //TODO: Проверить метод на других системах!
         public double[] GetShadowEstimates()
         {
             var index = 0;
-            var size = _nonBasisVariable.Length - _basisVariable.Length;
+            var size = m[m.Length - 1].Length - 1;
             var shadowEstimates = new double[size];
-            for (int i = size; i < m[m.Length - 1].Length - 1; i++, index++)
-            {
-                 shadowEstimates[index] = m[m.Length - 1][i];
-            }
+            var start = _nonBasisVariable.Length - _basisVariable.Length;
+            
+            AddShadowEstimates(start, size, ref shadowEstimates, ref index);
+            AddShadowEstimates(0,size-start, ref shadowEstimates, ref index);
 
             return shadowEstimates;
+        }
+
+        private void AddShadowEstimates(int start, int end, 
+            ref double[] shadowEstimates, ref int index)
+        {
+            for (var i = start; i < end; i++, index++)
+                shadowEstimates[index] = m[m.Length - 1][i];
         }
 
         public List<DConstraint> GetConstraint()
