@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using BL.Struct;
 using System.Linq;
 using System.Text;
+using System.Collections.Generic;
 
 namespace BL.Simplex
 {
@@ -19,6 +19,7 @@ namespace BL.Simplex
         protected static int OPTIMAL = 1;
         protected static int UNBOUNDED = 2;
 
+        protected bool _primal;
         private bool _minimize;
         protected double[] objective;
         private double[][] _constraints;
@@ -150,8 +151,8 @@ namespace BL.Simplex
                 s.Append('\t');
                 for (int j = 0; j < m[i].Length; ++j)
                 {
-                    s.Append($"{m[i][j]:f2}");
-                    s.Append('\t');
+                    if (j != m[i].Length - 1) s.Append($"{(_primal ? m[i][j] : m[i][j] * -1):f2}" + '\t');
+                    else s.Append($"{m[i][j]:f2}" + '\t');
                 }
                 s.Append('\n');
             }
@@ -196,11 +197,11 @@ namespace BL.Simplex
             for (int i = 0; i < m.Length - 1; ++i)
             {
                 simplexMatrix.Append('x' + $"{_basisVariable[i] + 1}"+'\t');
-
                 for (int j = 0; j < m[i].Length; ++j)
                 {
-                    if (buffer.FirstOrDefault(b => b.ElementValue == j + 1).Element == null) 
-                    simplexMatrix.Append($"{m[i][j]:f2}"+ '\t');
+                    if (buffer.FirstOrDefault(b => b.ElementValue == j + 1).Element != null) continue;
+                    if (j != m[i].Length - 1) simplexMatrix.Append($"{(_primal ? m[i][j] : m[i][j] * -1):f2}" + '\t');
+                    else simplexMatrix.Append($"{m[i][j]:f2}" + '\t');
                 }
                 simplexMatrix.Append('\n');
             }
@@ -225,25 +226,6 @@ namespace BL.Simplex
             {
                 buffer[i].Element = "x" + $"{_basisVariable[i] + 1}";
                 buffer[i].ElementValue = _basisVariable[i] + 1;
-            }
-        }
-
-        struct Elements : IComparable
-        {
-            public string Element;
-            public int ElementValue;
-
-            public Elements(string element, int elementValue)
-            {
-                Element = element;
-                ElementValue = elementValue;
-            }
-
-            public int CompareTo(object sender)
-            {
-                if (sender is Elements elements)
-                    return CompareTo(elements.ElementValue);
-                throw new Exception("Невозможно сравнить два объекта");
             }
         }
 

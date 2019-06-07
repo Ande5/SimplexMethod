@@ -1,4 +1,4 @@
-﻿namespace BL
+﻿namespace BL.Struct
 {
     public enum Aspiration { min, max };
     public struct Function

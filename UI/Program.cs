@@ -11,7 +11,7 @@ namespace UI
             Console.Title = "Simplex";
 
             var inputData = new InputData();
-            inputData.ReadDataFile("Simplex Variant.txt");
+            inputData.ReadDataFile("Simplex Variant_3.txt");
 
             //Прямой симплекс метод
             var simplex = new InitializeSimplex(inputData.Function, inputData.Constraints);

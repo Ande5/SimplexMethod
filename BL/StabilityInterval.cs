@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BL.Simplex;
+using BL.Struct;
 
 namespace BL
 {

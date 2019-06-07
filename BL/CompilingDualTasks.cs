@@ -1,5 +1,6 @@
 ﻿using BL.Simplex;
 using System.Collections.Generic;
+using BL.Struct;
 
 namespace BL
 {

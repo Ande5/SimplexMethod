@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BL.Simplex;
+using BL.Struct;
 
 namespace BL
 {
@@ -101,24 +102,14 @@ namespace BL
         /// </summary>
         public void AssertResult()
         {
-            // Get coefficients of objective function from simplex
             var targetCoefficientValues = _dualSimplex.GetCoefficients();
-
             var str = "///Результат решения симплекс-методом///\n";
 
-            // We do some formatting data here
             str += "\nx = (";
             for (var i = 0; i < Variables; ++i)
-            {
-              //  str += $"x{i+1}: {targetCoefficientValues[i]:f2}\n";
-                str += $" {targetCoefficientValues[i]:f2};";
-                // PrintInfo?.Invoke(this, $" x{i} : {targetCoefficientValues[i]:f3} ");
-            }
+                str += $" {targetCoefficientValues[i]:f2};"; str += ") ";
 
-            str += ") ";
-
-            // Get answer function
-            var res = "F(x) = " + _dualSimplex.GetObjectiveResult();
+            // Вывод значения функции
             str += $"F(x) = {_dualSimplex.GetObjectiveResult():f2}" + Environment.NewLine;
             PrintInfo?.Invoke(this, str);
         }

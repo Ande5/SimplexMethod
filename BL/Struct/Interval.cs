@@ -1,6 +1,6 @@
-﻿namespace BL
+﻿namespace BL.Struct
 {
-    public struct Interval
+    internal struct Interval
     {
         private double _a;
         private double _b;

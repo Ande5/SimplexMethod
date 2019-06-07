@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using BL.Extensions;
 using BL.Simplex;
+using BL.Struct;
 
 namespace BL
 {

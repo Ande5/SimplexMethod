@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using BL.Simplex;
+using BL.Struct;
 
 namespace BL
 {

@@ -2,8 +2,6 @@
 {
     internal class DualSimplex : PrimalSimplex
     {
-        private bool _primal;
-
         public override void Init()
         {
             base.Init();
@@ -13,8 +11,6 @@
         public override int Iterate()
         {
             if (_primal) return base.Iterate();
-
-            double quotient;
 
             // Select pivot row
             int pr = -1;
@@ -46,7 +42,7 @@
                 for (int i = 0; i < m[pr].Length - 1; ++i)
                 {
                     if (!(m[pr][i] < 0) || i >= objective.Length && locked[i - objective.Length]) continue;
-                    quotient = m[m.Length - 1][i] / m[pr][i];
+                    var quotient = m[m.Length - 1][i] / m[pr][i];
                     if (quotient > max)
                     {
                         max = quotient;
