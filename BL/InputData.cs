@@ -73,14 +73,14 @@ namespace BL
         private void SearchObjConstraints(string input)
         {
             const string patternBound = @"(\s[>=<]+)";
-            const string patternLeft = @"([+-]?\s[+-]?[0-9]*[.,]?[0-9])";
+            const string patternLeft = @"(([+-]?\s[+-]?[0-9]*[.,]?[0-9])\w+)";
             const string patternFull = @"(([-]?[0-9]*[.,]?[0-9])\s*([^>=<]*))";
            
             const RegexOptions options = RegexOptions.Multiline;
             var restriction = Regex.Matches(input, patternFull, options);
 
             var leftRestriction = " "+ restriction[0].Value;
-            var rightRestriction =  double.Parse(restriction[1].Value);
+            var rightRestriction =  double.Parse(restriction[1].Value.ReplacePointToComma());
 
             var consValues = new List<double>();
 

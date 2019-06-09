@@ -11,7 +11,7 @@ namespace UI
             Console.Title = "Simplex";
 
             var inputData = new InputData();
-            inputData.ReadDataFile("Simplex Variant_3.txt");
+            inputData.ReadDataFile("data.txt");
 
             //Прямой симплекс метод
             var simplex = new InitializeSimplex(inputData.Function, inputData.Constraints);
@@ -20,8 +20,8 @@ namespace UI
             Console.WriteLine(simplex.ToString());
             Console.WriteLine("///Классическая симпликс-таблица///");
             Console.WriteLine(simplex.ResultClassicSimplexTabel);
-            Console.WriteLine("///Развернутая симпликс-таблица///");
-            Console.WriteLine(simplex.ResultSimplexTabel);
+           // Console.WriteLine("///Развернутая симпликс-таблица///");
+           // Console.WriteLine(simplex.ResultSimplexTabel);
             simplex.AssertResult();
             Console.WriteLine("///Теневые оценки///\n");
             Console.WriteLine(simplex.PrintShadowEstimates());
@@ -35,19 +35,20 @@ namespace UI
             Console.WriteLine("///Интервалы устойчивости///\n");
             stabilityInterval.FindingInterval();
 
-            //Формирование двойственной задачи
-            var compilingDualTasks = new CompilingDualTasks();
-            compilingDualTasks.CompilingTasks(inputData.Function, inputData.Constraints);
-            Console.WriteLine("\n///Двойственная задача///\n");
-            Console.WriteLine(compilingDualTasks.ToString());
+            // Формирование двойственной задачи
+            //var compilingDualTasks = new CompilingDualTasks();
+            //compilingDualTasks.CompilingTasks(inputData.Function, inputData.Constraints);
+            //Console.WriteLine("\n///Двойственная задача///\n");
+            //Console.WriteLine(compilingDualTasks.ToString());
 
-            var dualSimplex = new InitializeSimplex(compilingDualTasks.Function, compilingDualTasks.Constraints);
-            dualSimplex.PrintInfo += PrintInfo;
-            Console.WriteLine("///Классическая симпликс-таблица///");
-            Console.WriteLine(dualSimplex.ResultClassicSimplexTabel);
-            Console.WriteLine("///Развернутая симпликс-таблица///");
-            Console.WriteLine(dualSimplex.ResultSimplexTabel);
-            dualSimplex.AssertResult();
+            //Решение двойственной задачи
+            //var dualSimplex = new InitializeSimplex(compilingDualTasks.Function, compilingDualTasks.Constraints);
+            //dualSimplex.PrintInfo += PrintInfo;
+            //Console.WriteLine("///Классическая симпликс-таблица///");
+            //Console.WriteLine(dualSimplex.ResultClassicSimplexTabel);
+            //Console.WriteLine("///Развернутая симпликс-таблица///");
+            //Console.WriteLine(dualSimplex.ResultSimplexTabel);
+            //dualSimplex.AssertResult();
 
             Console.ReadKey();
         }

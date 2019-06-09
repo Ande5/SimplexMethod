@@ -32,7 +32,7 @@ namespace BL
         }
 
         /// <summary>
-        /// Инициализация двойственого симплекс метода
+        /// Инициализация двойственного симплекс метода
         /// </summary>     
         private void InitDualSimplex()
         {

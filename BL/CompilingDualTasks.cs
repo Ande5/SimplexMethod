@@ -15,11 +15,11 @@ namespace BL
         {
             var sizeMatrix = constraintsValue[0].GetCoefficients().Length;
             var equations = new int[sizeMatrix];
-            var matrix = new double[sizeMatrix,sizeMatrix];
+            var matrix = new double[sizeMatrix, sizeMatrix];
            
             for (int i = 0; i < constraintsValue.Length; i++)
             {
-                for (int j = 0; j < sizeMatrix; j++)
+                for (int j = 0; j < sizeMatrix-1; j++)
                 {
                     matrix[i, j] = constraintsValue[i].GetCoefficients()[j];
                 }
@@ -96,6 +96,7 @@ namespace BL
         /// Транспонирование матрицы
         /// </summary>
         /// <param name="matrix"></param>
+        // TODO Добавить транспанирование для неквадратной матрицы
         private void MatrixTransposition(ref double[,] matrix)
         {
             for (int i = 0; i <= matrix.GetUpperBound(0); i++)

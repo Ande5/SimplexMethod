@@ -238,7 +238,7 @@ namespace BL.Simplex
             var start = _nonBasisVariable.Length - _basisVariable.Length;
             
             AddShadowEstimates(start, size, ref shadowEstimates, ref index);
-            AddShadowEstimates(0,size-start, ref shadowEstimates, ref index);
+            AddShadowEstimates(0,size-start-1, ref shadowEstimates, ref index);
 
             return shadowEstimates;
         }
@@ -247,6 +247,8 @@ namespace BL.Simplex
             ref double[] shadowEstimates, ref int index)
         {
             for (var i = start; i < end; i++, index++)
+                if (index >= shadowEstimates.Length) break;
+            else
                 shadowEstimates[index] = m[m.Length - 1][i];
         }
 
